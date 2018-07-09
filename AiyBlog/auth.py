@@ -35,6 +35,6 @@ def login():
 def logout():
     if authed():
         session.clear()
-    return "xxx"
+    return "you are logout successful!"
 
 
