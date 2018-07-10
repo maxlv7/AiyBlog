@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href= "{{ request.script_root }}/themes/admin/static/grid.css">
+    <link rel="stylesheet" href= "{{ request.script_root }}/themes/default/static/normalize.min.css">
+    <link rel="stylesheet" href= "{{ request.script_root }}/themes/admin/static/style.css">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-mb-12 col-4 col-offset-4">
+            <div class="warp">
+                <h1 class="tac"><a href="#" class="logo">AiyBlog</a></h1>
+                <form method="post" action={{ url_for("auth.login") }} id="login-form">
+                    <p>
+                        <input type="text" name="name" placeholder="用户名" class="username" required>
+                    </p>
+                    <p>
+                        <input type="password" name="password" placeholder="密码" class="password" required>
+                    </p>
+                    <p>
+                        <button type="submit" class="submit">登录</button>
+                    </p>
+                </form>
+                <p class="return"><a href="#">返回首页</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

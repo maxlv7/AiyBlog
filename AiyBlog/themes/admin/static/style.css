@@ -1,0 +1,164 @@
+html {
+    font-size: 16px;
+}
+body {
+    background-color: #f5f5f5;
+    font-family: "Microsoft YaHei","Droid Serif",Georgia,"Times New Roman","PingFang SC","Hiragino Sans GB","Source Han Sans CN","WenQuanYi Micro Hei","Microsoft Yahei",serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+a {
+    text-decoration: none;
+    color: #3354AA;
+}
+
+ul {
+    padding: 0;
+    margin: 0;
+}
+li {
+    list-style: none;
+}
+button {
+    border: 0;
+    padding: 0;
+}
+
+
+/*----------------------------------auth开始------------------------------------------*/
+.warp {
+    padding-top: 4rem;
+}
+.logo {
+    width: 200px;
+    height: 83px;
+    display: block;
+    font-size: 0;
+    background: url("image/logo.png") no-repeat center top; /*-webkit-background-size: cover;*/
+    background-size: 100% 110%;
+    margin: 0 auto;
+}
+
+#login-form {
+    padding: 1rem 0 0 0;
+}
+#login-form .username {
+    border: 1px solid #D9D9D9;
+    width: 100%;
+    padding: 0.3rem;
+    border-radius: 2px;
+}
+
+#login-form .password {
+    border: 1px solid #D9D9D9;
+    width: 100%;
+    padding: 0.3rem;
+    border-radius: 2px;
+}
+
+#login-form .submit {
+    background-color: #FF8500;
+    width: 100%;
+    text-align: center;
+    padding: .6rem;
+    cursor: pointer;
+    border-radius: 2px;
+    transition:  background-color 0.5s;
+    color: #ffffff;
+}
+
+#login-form .submit:hover {
+    background-color: orange;
+}
+
+.return {
+    text-align: center;
+}
+/*----------------------------------auth结束------------------------------------------*/
+
+/*导航条开始*/
+.nav {
+    padding: 0 .5rem;
+    background-color: #eaeaea;
+
+    /*height: 2rem;*/
+}
+.nav-left {
+    height: 100%;
+    float: left;
+
+}
+
+.nav-left .root {
+    float: left;
+    position: relative;
+}
+.nav-left ul {
+    height: 100%;
+    float: left;
+    margin: 0 .5rem;
+    /*background-color: lightskyblue;*/
+    /*padding: 0 .5rem;*/
+}
+
+.nav-left ul a {
+    display: block;
+    width: 100%;
+    height: 2.2rem;
+    line-height: 2.2rem;
+    color: #4c4c4c;
+    padding: 0 .7rem;
+}
+
+.nav-right {
+    float: right;
+}
+.nav-right li {
+    float: left;
+    margin: 0 .5rem;
+
+}
+
+.nav-right a {
+    display: block;
+    height: 2.2rem;
+    line-height: 2.2rem;
+    color: #4c4c4c;
+    /*background-color: lightskyblue;*/
+    padding: 0 .7rem;
+}
+
+.nav a:hover {
+    background-color: #EDEEF0;
+    color: #FF8500;
+}
+
+.nav .root:hover .child{
+    display: block;
+
+}
+
+.child {
+    position: absolute;
+    top: 2.2rem;
+    left: 0;
+    display: none;
+    width: 6rem;
+    z-index: 250;
+
+}
+
+.child li {
+    border: .5px solid #ffd75d;
+    border-top: none;
+    border-radius: 2px;
+    background-color: #fbfbfb;
+}
+.child li a:hover {
+    background-color: #FFF5DA!important;
+}
+
+
+/*导航条结束*/
