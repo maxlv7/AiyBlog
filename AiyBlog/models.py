@@ -9,7 +9,7 @@ class aiyblog_comments(db.Model):
     created = db.Column(db.Integer,default=0)
     author = db.Column(db.String(200),default="NULL")
     authorId = db.Column(db.Integer,default=0)
-    owenerId = db.Column(db.Integer,default=0)
+    ownerId = db.Column(db.Integer,default=0)
     mail = db.Column(db.String(200),default="NULL")
     url = db.Column(db.String(200),default="NULL")
     ip = db.Column(db.String(64),default="NULL")
@@ -26,7 +26,7 @@ class aiyblog_contents(db.Model):
     cid = db.Column(db.Integer,primary_key=True,nullable=False,autoincrement=True)
     title = db.Column(db.String(200),default="NULL")
     slug = db.Column(db.String(200),default="NULL")
-    created = db.Column(db.Integer, default=0,index=True)
+    created = db.Column(db.Integer, default=0)
     modified = db.Column(db.Integer, default=0)
     text = db.Column(db.Text, default="NULL")
     order = db.Column(db.Integer, default=0)
@@ -36,9 +36,9 @@ class aiyblog_contents(db.Model):
     status = db.Column(db.String(16), default="publish")
     password = db.Column(db.String(32), default="NULL")
     commentsNum = db.Column(db.Integer, default=0)
-    allowComment = db.Column(db.Enum,default=0)
-    allowPing = db.Column(db.Enum,default=0)
-    allowFeed = db.Column(db.Enum,default=0)
+    allowComment = db.Column(db.String(4),default=0)
+    allowPing = db.Column(db.String(4),default=0)
+    allowFeed = db.Column(db.String(4),default=0)
     parent = db.Column(db.Integer, default=0)
 
 class aiyblog_fields(db.Model):
@@ -85,7 +85,7 @@ class aiyblog_users(db.Model):
 
     __tablename__ = 'aiyblog_users'
 
-    uid = db.Column(db.Integer,primary_key=True,nullable=False,default="NULL",autoincrement=True)
+    uid = db.Column(db.Integer,primary_key=True,nullable=False,autoincrement=True)
     name = db.Column(db.String(32),default="NULL")
     password = db.Column(db.String(64),default="NULL")
     mail = db.Column(db.String(200),default="NULL")
