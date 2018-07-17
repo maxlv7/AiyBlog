@@ -2,7 +2,7 @@ from flask import Blueprint,request,session,render_template,redirect,url_for
 
 from AiyBlog import db
 from AiyBlog.models import aiyblog_users
-from AiyBlog.utils import check_hash,authed
+from AiyBlog.utils import pwd2hash,authed
 
 auth = Blueprint("auth",__name__,url_prefix='/auth')
 
@@ -36,22 +36,23 @@ def login():
 
 @auth.route('/register',methods=["GET","POST"])
 def register():
-    if request.method == "POST":
 
-        username = request.form["username"]
-        email = request.form["email"]
+    if request.method == "POST":
         errors = []
+        username = request.form["username"]
+        password = request.form["password"]
+
         if aiyblog_users.query.filter_by(name=username).first():
             errors.append("用户名已存在!")
 
-        if aiyblog_users.query.filter_by(mail=email).first():
-            errors.append("Email已存在!")
 
         if len(errors)==0:
-            u = aiyblog_users(name=username,mail=email)
+            u = aiyblog_users(name=username,password=pwd2hash(password.encode("utf-8")))
             db.session.add(u)
             db.session.commit()
             db.session.close()
+        else:
+            return render_template("admin/auth/register.html",errors=errors)
 
 
 
