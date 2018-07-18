@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>注册</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href= "{{ request.script_root }}/themes/admin/static/grid.css">
+    <link rel="stylesheet" href= "{{ request.script_root }}/themes/default/static/normalize.min.css">
+    <link rel="stylesheet" href= "{{ request.script_root }}/themes/admin/static/style.css">
+</head>
+<body>
+{% for e in errors %}
+    <div id="error">{{ e }}</div>
+    <style>
+    #error {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 2rem;
+        line-height: 2rem;
+        background-color: #ffb530;
+        width: 100%;
+        text-align: center;
+        color: white;
+        display: none;
+        padding-top: 0;
+    }
+    </style>
+
+    <script>
+        function fadein(elem,speed) {
+            speed = speed || 20;
+            elem.style.display = "block";
+            elem.style.opacity = 0;
+
+            let val = 0;
+
+            (function () {
+                elem.style.opacity = val;
+                val+=0.05;
+                if(elem.style.opacity<=1)
+                {
+                    setTimeout(arguments.callee,speed);
+                    console.log(":"+elem.style.opacity)
+                }
+
+            })();
+
+        }
+        function fadeout(elem,speed) {
+            speed = speed || 20;
+            elem.style.display = "block";
+            elem.style.opacity = 1;
+
+            let val = 1;
+
+            (function () {
+                elem.style.opacity = val;
+                val-=0.05;
+                if(elem.style.opacity>=0)
+                {
+                    setTimeout(arguments.callee,speed)
+                }
+
+            })();
+        }
+        fadein(document.getElementById("error"),66);
+        {#fadeout(document.getElementById("error"),66);#}
+    </script>
+{% endfor %}
+<div class="container">
+    <div class="row">
+        <div class="col-mb-12 col-4 col-offset-4">
+            <div class="warp">
+                <h1 class="tac"><a href="#" class="logo">AiyBlog</a></h1>
+                <form method="post" action={{ url_for("auth.register") }} id="login-form">
+                    <p>
+                        <input id ="username" type="text" name="username" placeholder="用户名" class="username" required>
+                    </p>
+                    <p>
+                        <input id="password" type="password" name="password" placeholder="密码" class="password" required>
+                    </p>
+                    <p>
+                        <button type="submit" class="submit" onclick="check()">注册</button>
+                    </p>
+                </form>
+                <p class="return"><a href="/">返回首页</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function check() {
+        let username = document.getElementById("username");
+        let password = document.getElementById("password");
+        if(username.value==="")
+        {
+            alert("请输入用户名!");
+        }
+        if(password.value==="")
+        {
+            alert("请输入密码!");
+        }
+    }
+</script>
+</body>
+</html>
