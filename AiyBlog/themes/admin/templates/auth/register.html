@@ -38,15 +38,13 @@
 
             (function () {
                 elem.style.opacity = val;
-                val+=0.05;
+                val+=0.01;
                 if(elem.style.opacity<=1)
                 {
                     setTimeout(arguments.callee,speed);
-                    console.log(":"+elem.style.opacity)
                 }
 
             })();
-
         }
         function fadeout(elem,speed) {
             speed = speed || 20;
@@ -57,7 +55,7 @@
 
             (function () {
                 elem.style.opacity = val;
-                val-=0.05;
+                val-=0.01;
                 if(elem.style.opacity>=0)
                 {
                     setTimeout(arguments.callee,speed)
@@ -65,8 +63,13 @@
 
             })();
         }
-        fadein(document.getElementById("error"),66);
-        {#fadeout(document.getElementById("error"),66);#}
+        function clear() {
+            fadeout(document.getElementById("error"),20);
+        }
+
+        fadein(document.getElementById("error"),20);
+
+        setTimeout(clear,4000)
     </script>
 {% endfor %}
 <div class="container">

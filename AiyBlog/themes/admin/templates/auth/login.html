@@ -38,18 +38,38 @@
 
             (function () {
                 elem.style.opacity = val;
-                val+=0.05;
+                val+=0.01;
                 if(elem.style.opacity<=1)
                 {
                     setTimeout(arguments.callee,speed);
-                    console.log(":"+elem.style.opacity)
                 }
 
             })();
+        }
+        function fadeout(elem,speed) {
+            speed = speed || 20;
+            elem.style.display = "block";
+            elem.style.opacity = 1;
 
+            let val = 1;
+
+            (function () {
+                elem.style.opacity = val;
+                val-=0.01;
+                if(elem.style.opacity>=0)
+                {
+                    setTimeout(arguments.callee,speed)
+                }
+
+            })();
+        }
+        function clear() {
+            fadeout(document.getElementById("error"),20);
         }
 
-        fadein(document.getElementById("error"),66);
+        fadein(document.getElementById("error"),20);
+
+        setTimeout(clear,4000)
 
     </script>
 {% endfor %}
@@ -70,7 +90,9 @@
                     </p>
                 </form>
                 <p class="return">
+                    {% if get_config("allowRegister")==1 %}
                     <a href="{{ url_for("auth.register") }}">用户注册 |</a>
+                    {% endif %}
                     <a href="/">返回首页</a>
                 </p>
             </div>
