@@ -1,0 +1,116 @@
+{% extends "admin/__base__.html" %}
+
+
+{% block head %}
+    {{ super() }}
+     <link rel="stylesheet" href= "{{ request.script_root }}/themes/admin/static/editor/css/editormd.css">
+{% endblock %}
+
+{% block title %}
+    撰写新文章
+{% endblock %}
+
+{% block nav %}
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+    <div class="main">
+        <div class="container">
+            <h3>撰写新文章</h3>
+            <div class="row">
+                <form action="#" method="post">
+                <div class="col-9 col-mb-12 col-tb-9">
+                        <div class="summary">
+                            <p>
+                                <input type="text" name="title" placeholder="标题" autocomplete="off">
+                            </p>
+                            <p>{{ get_config("siteUrl") }}/archives/{cid}/</p>
+                        </div>
+                         <div id="aiyblog-write" class="editormd" >
+                          <!-- 这个文本域是用来保存markdown源码的，当我们要写入从数据库读出的markdown的时候，可以把数据填充到此-->
+                            <textarea class="editormd-markdown-textarea" name="markdown"></textarea>
+                          <!-- 第二个隐藏文本域，用来构造生成的HTML代码，方便表单POST提交，这里的name可以任意取，后台接受时以这个name键为准 -->
+                            <textarea class="editormd-html-textarea" name="text"></textarea>
+                        </div>
+                        <button type="submit" class="submit">发布文章</button>
+
+
+                 </div>
+                <div class="col-3 col-tb-3 col-mb-12">
+                    <div class="write-options">
+
+{#                        <h4>发布日期</h4>#}
+{#                        <input type="text">#}
+                        <h4>分类</h4>
+                        <ul>
+                            {% for c in cat %}
+                            <li>
+                                <input id="cg-{{ c.mid }}" type="checkbox" value="{{ c.mid }}" name="category[{{ c.mid }}]">
+                                <label for="cg-{{ c.mid }}">{{ c.name }}</label>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        <h4>标签</h4>
+                        <input name="tags" type="text" placeholder="请输入标签名,用逗号分开">
+                        <p>
+                            <button type="button" class="high" onclick="show()">高级选项 ></button>
+                        </p>
+                            <div class="options" id="options" style="display: none">
+                                <label style="font-weight: 700; color: #5d5d5d; display: block;">公开度</label>
+                                <p>
+                                    <select name="visibility" id="visibility" onchange="test(this.value)">
+                                        <option value="publish">公开</option>
+                                        <option value="password">加密</option>
+                                        <option value="hide">隐藏</option>
+                                    </select>
+                                    <p>
+                                        <input type="text" id="pwd" style="display: none" placeholder="请输入密码">
+                                    </p>
+                                </p>
+
+                              <label style="font-weight: 700; color: #5d5d5d; display: block; padding-bottom: 1rem;">权限控制</label>
+                                    <input type="checkbox" id="allowComments" name="allowComments" checked>
+                                   <label for="allowComments">允许评论</label>
+
+
+                             </div>
+
+                </div>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/themes/admin/static/editor/js/jquery.min.js"></script>
+    <script src="/themes/admin/static/editor/editormd.min.js"></script>
+    <script>
+  var editer = editormd({
+      id :"aiyblog-write",
+      width   : "100%",
+      height  : 640,
+      path : "/themes/admin/static/editor/lib/",
+      saveHTMLToTextarea : true,
+      toolbar :true,
+      watch : false,
+      toolbarAutoFixed:false
+  });
+  function show() {
+      document.getElementById("options").style.display = "block";
+  }
+  function test(str) {
+      if(str==="password")
+      {
+          document.getElementById("pwd").style.display = "block"
+      }
+      else{
+          document.getElementById("pwd").style.display = "none"
+      }
+
+  }
+</script>
+{% endblock %}
+
+{#text#}
+{#aiyblog-write-html-code#}
