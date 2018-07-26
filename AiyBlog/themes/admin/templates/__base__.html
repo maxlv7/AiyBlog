@@ -33,12 +33,12 @@
         <div class="root">
         <ul>
             <li>
-                <a href="#">撰写</a>
+                <a href={{ url_for("AiyBlog.admin.write.post") }}>撰写</a>
             </li>
             {#这里为隐藏的菜单#}
             <ul class="child">
-                <li><a href="#">写文章</a></li>
-                <li><a href="#">创建页面</a></li>
+                <li><a href={{ url_for("AiyBlog.admin.write.post") }}>写文章</a></li>
+                <li><a href={{ url_for("AiyBlog.admin.write.page") }}>创建页面</a></li>
             </ul>
         </ul>
         </div>
@@ -63,7 +63,7 @@
         <div class="root">
             <ul>
                 <li>
-                    <a href="#">设置</a>
+                    <a href={{ url_for("AiyBlog.admin.settings.base") }}>设置</a>
                 </li>
                 {#这里为隐藏的菜单#}
             <ul class="child">

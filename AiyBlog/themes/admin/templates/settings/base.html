@@ -1,0 +1,82 @@
+{% extends "admin/__base__.html" %}
+
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block title %}
+    {{ super() }}
+{% endblock %}
+
+{% block nav %}
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+    <div class="main">
+        <div class="container">
+            <h2>基本设置</h2>
+            <div class="row">
+                <div class="col-tb-8 col-tb-offset-2">
+                    <form method="post" action={{ url_for("AiyBlog.admin.settings.base") }} id="settings-base">
+                        <ul>
+                            <li>
+                                <label>站点名称</label>
+                                <input type="text" name = "siteName" value="{{ get_config("siteName") }}">
+                                <p>站点的名称将显示在网页的标题处.</p>
+                            </li>
+                        </ul>
+                        <ul>
+                            <li>
+                                <label>站点地址</label>
+                                <input type="text" name="siteUrl" value="{{ get_config("siteUrl") }}">
+                                <p>站点地址主要用于生成内容的永久链接..</p>
+                            </li>
+                        </ul>
+                        <ul>
+                            <li>
+                                <label>站点描述</label>
+                                <input type="text" name="siteDescription" value="{{ get_config("siteDescription") }}">
+                                <p>站点描述将显示在网页代码的头部..</p>
+                            </li>
+                        </ul>
+                        <ul>
+                            <li>
+                                <label>关键词</label>
+                                <input type="text" name="siteKeyword" value="{{ get_config("siteKeyword") }}">
+                                <p>请以半角逗号 "," 分割多个关键字..</p>
+                            </li>
+                        </ul>
+                        <ul>
+                            <li>
+                                <label>是否允许注册</label>
+                                {% if get_config("allowRegister")=="1" %}
+                                <span>
+                                    <input type="radio" name="allowRegister" value="1" checked>
+                                    <label>允许</label>
+                                    <input type="radio" name="allowRegister" value="0">
+                                    <label>不允许</label>
+                                </span>
+                                {% else %}
+                                <span>
+                                    <input type="radio" name="allowRegister" value="1" >
+                                    <label>允许</label>
+                                    <input type="radio" name="allowRegister" value="0" checked>
+                                    <label>不允许</label>
+                                </span>
+                                {% endif %}
+                                <p>允许访问者注册到你的网站, 默认的注册用户不享有任何写入权限.</p>
+                            </li>
+                        </ul>
+                        <ul>
+                            <li>
+                                <button type="submit" class="submit">保存设置</button>
+                            </li>
+                        </ul>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
