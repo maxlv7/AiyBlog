@@ -50,15 +50,23 @@ def create_app(config_name):
     from AiyBlog import utils
 
     utils.init_errors(app)
+    utils.init_utils(app)
 
 
     # register blueprint
     from AiyBlog.auth import auth
     from AiyBlog.admin import admin
+    from AiyBlog.admin.settings import settings
+    from AiyBlog.admin.write import write
+    from AiyBlog.admin.console import console
     from AiyBlog.views import views
 
     app.register_blueprint(auth)
     app.register_blueprint(admin)
     app.register_blueprint(views)
+    app.register_blueprint(settings)
+    app.register_blueprint(write)
+    app.register_blueprint(console)
+
     return app
 
