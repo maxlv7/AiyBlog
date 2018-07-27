@@ -1,1 +1,59 @@
-{% extends "admin/base.html" %}
+{% extends "admin/__base__.html" %}
+
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block title %}
+    {{ super() }}
+{% endblock %}
+
+{% block nav %}
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+    <div class="main">
+        <div class="container">
+            <div class="aiy_title">
+                <h2>网站概要</h2>
+            </div>
+            <div class="dashboard">
+                <p>目前有 <em>{{ index[0] }}</em> 篇文章,并有 <em>{{ index[1] }}</em> 条关于你的评论在 <em>{{ index[2] }}</em> 个分类中. </p>
+                <h3>点击下面的链接快速开始:</h3>
+                <ul class="quick_nav clearfix">
+                    <li><a href={{ url_for("AiyBlog.admin.write.post") }}>写文章</a></li>
+                    <li><a href="">换外观</a></li>
+                    <li><a href="">插件管理(待开发)</a></li>
+                    <li><a href={{ url_for("AiyBlog.admin.settings.base") }}>系统设置</a></li>
+                </ul>
+            </div>
+            <div class="row recent">
+               <div class="col-mb-12 col-tb-4">
+                <h4>最近发布的文章</h4>
+                   <ul class="rec">
+                       <li><span>7.8</span><a href="#">Test</a></li>
+                       <li><span>7.9</span><a href="#">Test</a></li>
+                       <li><span>7.10</span><a href="#">Test</a></li>
+                   </ul>
+                </div>
+                <div class="col-mb-12 col-tb-4">
+                 <h4>最近得到的回复</h4>
+                   <ul class="rec">
+                       <li><span>7.8</span><a href="#">Test</a></li>
+                       <li><span>7.9</span><a href="#">Test</a></li>
+                       <li><span>7.10</span><a href="#">Test</a></li>
+                   </ul>
+                </div>
+                <div class="col-mb-12 col-tb-4">
+                    <h4>官方日志</h4>
+                   <ul class="rec">
+                       <li><span>7.8</span><a href="#">AiyBlog</a></li>
+                   </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+

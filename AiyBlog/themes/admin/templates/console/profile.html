@@ -1,0 +1,113 @@
+{% extends "admin/__base__.html" %}
+
+
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block title %}
+    创建新页面
+{% endblock %}
+
+{% block nav %}
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div>
+            <h2>个人设置</h2>
+        </div>
+        <div class="row">
+            <div class="col-tb-3 col-mb-12">
+                <div style="margin-top: 1rem">
+                    <a href="#">
+                        <img src="/themes/admin/static/image/log.jpg" alt="">
+                    </a>
+                    <h3 style="color: #2c2c2c">{{ session["username"] }}</h3>
+                    <div class="user-brief">
+                         <p>{{ session["username"] }}</p>
+                         <p>目前有 {{ ctn }} 篇日志, 并有 {{ cmn }} 条关于你的评论在 {{ cgm }} 个分类中.</p>
+                         <p>最后登录: {{ activated[0] }}年{{ activated[1] }}月{{ activated[2] }}日</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-tb-6 col-mb-12 col-tb-offset-1">
+            <div class="user-profile">
+                <h3>个人资料</h3>
+                <form action="{{ url_for("AiyBlog.admin.console.profile") }}" method="post">
+                    <ul>
+                        <li>
+                            <p>昵称</p>
+                            {% if user.screenName %}
+                                <input type="text" name="nickname" value="{{ user.screenName }}">
+                            {% else %}
+                                <input type="text" name="nickname" value="{{ user.name }}">
+                            {% endif %}
+                            <label>用户昵称可以与用户名不同, 用于前台显示.</label>
+                            <label>如果你将此项留空, 将默认使用用户名.</label>
+                        </li>
+                        <li>
+                            <p>个人主页地址</p>
+                            <input type="url" name="url" value="{{ user.url }}">
+                            <label>此用户的个人主页地址, 请用 http:// 开头.</label>
+                        </li>
+                        <li>
+                            <p>邮箱</p>
+                            <input type="email" name="email" value="{{ user.mail }}">
+                            <label>电子邮箱地址将作为此用户的主要联系方式.</label>
+                            <label>请不要与系统中现有的电子邮箱地址重复.</label>
+                        </li>
+                        <li>
+                            <button type="submit" class="submit">更新信息</button>
+                        </li>
+                    </ul>
+                </form>
+                <h3>密码修改</h3>
+                <form action="{{ url_for("AiyBlog.admin.console.profile") }}" method="post">
+                     <ul>
+                         <li>
+                            <p>用户密码</p>
+                            <input id="new-pwd" type="password" name="password" style="width: 50%;" required>
+                            <label>为此用户分配一个密码.</label>
+                            <label>建议使用特殊字符与字母、数字的混编样式,以增加系统安全性.</label>
+                             <div class="hint" id="hint1">
+                                    必须填写密码
+                             </div>
+                         </li>
+                         <li>
+                            <p>用户密码确认</p>
+                            <input id="confirm-pwd" type="password" oninput="judge(this)" onfocus="judge2()"  name="" style="width: 50%;" required>
+                            <label>请确认你的密码, 与上面输入的密码保持一致.</label>
+                              <div class="hint" id="hint2">
+                                    两次输入的密码不一致
+                             </div>
+                        </li>
+                         <li>
+                            <button id="" type="submit" class="submit" style="width: 20%;">更新密码</button>
+                        </li>
+                     </ul>
+                </form>
+            </div>
+        </div>
+        </div>
+    </div>
+    <script>
+    function judge(obj) {
+        if(obj.value===document.getElementById("new-pwd").value)
+        {
+            document.getElementById("hint2").style.display = "none";
+            document.getElementById("hint1").style.display = "none";
+        }
+        else {
+            document.getElementById("hint2").style.display = "block";
+        }
+    }
+    function judge2() {
+       if(document.getElementById("new-pwd").value==="")
+        {
+            document.getElementById("hint1").style.display = "block";
+        }
+    }
+    </script>
+{% endblock %}
