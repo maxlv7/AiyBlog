@@ -1,7 +1,7 @@
 import time
 
 from flask import Blueprint
-from flask import render_template,request,url_for,redirect
+from flask import render_template,request,url_for,redirect,session
 from AiyBlog import db
 from AiyBlog.models import aiyblog_metas,aiyblog_contents,aiyblog_relationships
 
@@ -13,20 +13,14 @@ def post():
     categories = aiyblog_metas.query.filter_by(type="category").all()
     tags = aiyblog_metas.query.filter_by(type="tag").all()
     if request.method == "POST":
-        index=[]
-        cgs = []
-        for c in categories:
-            index.append(c.mid)
-        for x in index:
-            try:
-                cgs.append(request.form["category[%s]"%(x)])
-            except:
-                pass
+
+        cgs = request.form.getlist("category[]")
         title = request.form["title"] or "未命名文章"
         text = request.form["markdown"]
         status = request.form["visibility"]
         raw_tags = request.form["tags"]
-        new_tags = tags.replace('，',',').split(',')
+
+        new_tags = raw_tags.replace('，',',').split(',')
 
         try:
             allowComments = request.form["allowComments"]
@@ -34,9 +28,10 @@ def post():
             allowComments = "off"
         # some oper
         content = aiyblog_contents(title=title,created=int(time.time()),text=text,type="post",\
-                                   status=status,allowComment=allowComments)
+                                   status=status,allowComment=allowComments,authorId=session["uid"])
         db.session.add(content)
         db.session.commit()
+
         # 先拿到cid,然后再找到对应的mid关系
         cid = content.cid
         for mid in cgs:
@@ -62,7 +57,7 @@ def page():
         except:
             allowComments = "off"
         page = aiyblog_contents(title=title,slug=slug,text=text,type="page",status=status,\
-                                allowComment=allowComments,order=order
+                                allowComment=allowComments,order=order,authorId=session["uid"]
                                 )
         db.session.add(page)
         db.session.commit()

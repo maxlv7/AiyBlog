@@ -45,8 +45,8 @@
                         <h4>分类</h4>
                         <ul>
                             {% for c in cat %}
-                            <li>
-                                <input id="cg-{{ c.mid }}" type="checkbox" value="{{ c.mid }}" name="category[{{ c.mid }}]">
+                              <li>
+                                <input id="cg-{{ c.mid }}" type="checkbox" value="{{ c.mid }}" name="category[]">
                                 <label for="cg-{{ c.mid }}">{{ c.name }}</label>
                             </li>
                             {% endfor %}
