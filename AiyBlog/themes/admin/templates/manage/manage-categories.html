@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block title %}
-    管理文章
+    管理分类
 {% endblock %}
 
 {% block nav %}
@@ -15,12 +15,12 @@
 
 {% block content %}
     <div class="container">
-        <div>
-            <h2>管理文章</h2>
+        <div class="title">
+            <h2>管理分类 <a href="{{ url_for("AiyBlog.admin.manage.create_cg") }}">添加</a></h2>
         </div>
         <div class="row">
             <div class="col-mb-12">
-                <form id="manage-posts" action="{{ url_for("AiyBlog.admin.action.delete_post") }}" method="post">
+                <form id="manage-categories" action="{{ url_for("AiyBlog.admin.action.delete_category") }}" method="post">
                 <div class="dropdown-select">
                     <button type="button" class="submit" style="width:93px;" onclick="del(this)"  value="0">选中项 <i class="iconfont icon-xiala1"></i></button>
                     <ul id="show-del">
@@ -32,36 +32,21 @@
                     <thead>
                     <tr>
                         <th>操作</th>
-                        <th>评论数量</th>
-                        <th>标题</th>
-                        <th>作者</th>
-                        <th>分类</th>
-                        <th>日期</th>
+                        <th>名称</th>
+                        <th>缩略名</th>
+                        <th>文章数</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {% for blog in blogs %}
-                    <tr onclick="select(this)" id="post-{{ blog.cid }}" class="">
-                        <td><input type="checkbox" value="{{ blog.cid }}" name="cid[]"></td>
-                        <td>1</td>
-                        <td>{{ blog.title }}
-                            <a href="{{ url_for("AiyBlog.admin.write.post",cid=blog.cid) }}" title="编辑">
-                                <i class="iconfont icon-bi"></i>
-                            </a>
-                            <a href="#" title="预览 {{ blog.cid }}">
-                                <i class="iconfont icon-liulan"></i>
-                            </a>
-
-                           </td>
-                        <td>{{ get_name_by_id (blog.authorId) }}</td>
+                    {% for c in cgs %}
+                    <tr onclick="select(this)" id="" class="">
+                        <td><input type="checkbox" value="{{ c.mid }}" name="mid[]"></td>
                         <td>
-                        {% for x in  find_mid_by_cid(blog.cid) |showcategories %}
-                        {{ x }}
-                        {% endfor %}
+                            <a href="{{ url_for("AiyBlog.admin.manage.categories",mid=c.mid) }}">{{ c.name }}</a>
+
                         </td>
-
-                        <td>{{ blog.created|showtime }}</td>
-
+                        <td>{{ c.slug or "无" }}</td>
+                        <td>{{ c.count }}</td>
                     </tr>
                     {% endfor %}
                     </tbody>
@@ -96,13 +81,13 @@
         }
     }
     function submit_form() {
-        let r = confirm("真的要删除选中的文章吗？");
+        let r = confirm("真的要删除选中的分类吗？");
         if(r===true)
         {
-           document.getElementById("manage-posts").submit()
+           document.getElementById("manage-categories").submit()
         }
         else{
-            console.log("3")
+            console.log("取消删除")
         }
     }
     </script>

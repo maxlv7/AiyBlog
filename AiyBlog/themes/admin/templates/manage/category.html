@@ -1,0 +1,60 @@
+{% extends "admin/__base__.html" %}
+
+
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block title %}
+    {% if request.args.get("mid") %}
+        修改分类-{{ category.name }}
+    {% else %}
+        添加分类
+    {% endif %}
+{% endblock %}
+
+{% block nav %}
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div>
+    {% if request.args.get("mid") %}
+       <h2>修改分类-{{ category.name }}</h2>
+    {% else %}
+         <h2>添加分类</h2>
+    {% endif %}
+
+        </div>
+        <div class="row">
+            <div class="col-mb-12 col-tb-6 col-tb-offset-3">
+                    {% if request.args.get("mid") %}
+                        <form action="{{ url_for("AiyBlog.admin.action.modify_category") }}" method="post" id="addCategory">
+                            <p>分类名称 *</p>
+                            <input type="text" name="name" value="{{ category.name }}" required>
+                            <p>分类缩略名</p>
+                            <input type="text" name="slug" value="{{ category.slug or "" }}">
+                            <label>分类缩略名用于创建友好的链接形式, 建议使用字母, 数字, 下划线和横杠.</label>
+                            <p>分类描述</p>
+                            <textarea name="description">{{ category.description or ""}}</textarea>
+                            <input type="text" name="mid" value="{{ category.mid }}" style="display: none">
+                            <button type="submit" class="submit">修改分类</button>
+                        </form>
+                    {% else %}
+                        <form action="{{ url_for("AiyBlog.admin.action.add_category") }}" method="post" id="addCategory">
+                            <p>分类名称 *</p>
+                            <input type="text" name="name" required>
+                            <p>分类缩略名</p>
+                            <input type="text" name="slug">
+                            <label>分类缩略名用于创建友好的链接形式, 建议使用字母, 数字, 下划线和横杠.</label>
+                            <p>分类描述</p>
+                            <textarea name="description"></textarea>
+                            <button type="submit" class="submit">添加分类</button>
+                        </form>
+                 {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

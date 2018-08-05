@@ -23,22 +23,8 @@ def post():
 
 @write.route('/page',methods=["GET","POST"])
 def page():
-
-    if request.method == "POST":
-        title = request.form["title"] or "未命名页面"
-        slug = request.form["slug"]
-        text = request.form["markdown"]
-        order = int(request.form["order"])
-        status = request.form["visibility"]
-        try:
-            allowComments = request.form["allowComments"]
-        except:
-            allowComments = "off"
-        page = aiyblog_contents(title=title,slug=slug,text=text,type="page",created=time.time(),status=status,\
-                                allowComment=allowComments,order=order,authorId=session["uid"]
-                                )
-        db.session.add(page)
-        db.session.commit()
-        return redirect(url_for("AiyBlog.admin.manage.posts"))
-
+    if request.args.get("cid"):
+        cid = request.args.get("cid")
+        page = aiyblog_contents.query.filter_by(cid=cid).first()
+        return render_template("admin/write/page.html",page=page)
     return render_template("admin/write/page.html")

@@ -126,6 +126,9 @@ def delete_post():
             #解除关联关系
             rea = aiyblog_relationships.query.filter_by(cid=cid).all()
             for x in rea:
+                t = aiyblog_metas.query.filter_by(mid=x.mid).first()
+                t.count-=1
+                db.session.add(t)
                 db.session.delete(x)
             #删除内容
             db.session.delete(content)
@@ -134,6 +137,76 @@ def delete_post():
             db.session.close()
         return redirect(url_for("AiyBlog.admin.manage.posts"))
 
+@action.route('/add-page',methods=["POST"])
+def add_page():
+    if request.method == "POST":
+        title = request.form["title"] or "未命名页面"
+        slug = request.form["slug"]
+        text = request.form["markdown"]
+        order = request.form["order"]
+        status = request.form["visibility"]
+        try:
+            allowComments = request.form["allowComments"]
+            order = int(order)
+        except:
+            allowComments = "off"
+
+        if request.form["password"]:
+            pwd = request.form["password"]
+            page = aiyblog_contents(title=title, slug=slug, text=text, type="page", created=time.time(), status=status, \
+                                    allowComment=allowComments, order=order, authorId=session["uid"],password=pwd
+                                    )
+        else:
+            page = aiyblog_contents(title=title,slug=slug,text=text,type="page",created=time.time(),status=status,\
+                                allowComment=allowComments,order=order,authorId=session["uid"]
+                                )
+        db.session.add(page)
+        db.session.commit()
+        return redirect(url_for("AiyBlog.admin.manage.pages"))
+
+@action.route('/modify-page',methods=["POST"])
+def modify_page():
+    if request.method == "POST":
+        cid = request.form["cid"]
+        #先删除原来的
+        t = aiyblog_contents.query.filter_by(cid=cid).first()
+        created = t.created
+        db.session.delete(t)
+        db.session.commit()
+
+        title = request.form["title"] or "未命名页面"
+        slug = request.form["slug"]
+        text = request.form["markdown"]
+        order = request.form["order"]
+        status = request.form["visibility"]
+        try:
+            allowComments = request.form["allowComments"]
+            order = int(order)
+        except:
+            allowComments = "off"
+
+        if request.form["password"]:
+            pwd = request.form["password"]
+            page = aiyblog_contents(cid=cid,title=title, slug=slug, text=text, type="page",created=created,modified=int(time.time()), status=status, \
+                                    allowComment=allowComments, order=order, authorId=session["uid"],password=pwd
+                                    )
+        else:
+            page = aiyblog_contents(cid=cid,itle=title, slug=slug, text=text, type="page", created=created,modified=int(time.time()), status=status, \
+                                    allowComment=allowComments, order=order, authorId=session["uid"]
+                                    )
+        db.session.add(page)
+        db.session.commit()
+        return redirect(url_for("AiyBlog.admin.manage.pages"))
+@action.route('/delete-page',methods=["POST"])
+def delete_page():
+    if request.method == "POST":
+        cid_list = request.form.getlist("cid[]")
+
+        for cid in cid_list:
+            t = aiyblog_contents.query.filter_by(cid=cid).first()
+            db.session.delete(t)
+            db.session.commit()
+        return redirect(url_for("AiyBlog.admin.manage.pages"))
 
 @action.route('/add-category',methods=["POST"])
 def add_category():
@@ -174,26 +247,53 @@ def delete_category():
     if request.method == "POST":
         ct_list = request.form.getlist("mid[]")
 
-        # 先删除分类
+        #找到该分类对应的所有文章
+        cid_list = []
+        for ct in ct_list:
+            t = aiyblog_relationships.query.filter_by(mid=ct).all()
+            for c in t:
+                cid_list.append(c.cid)
+        # print("cid_list:",set(cid_list))
+
+        cid_list = set(cid_list)
+
+        #找到所有文章中每个文章对应的分类
+        mid_list = []
+        for cid in cid_list:
+            t = aiyblog_relationships.query.filter_by(cid=cid).all()
+            for m in t:
+                mid_list.append(m.mid)
+        # print("mid_list:",mid_list)
+
+        #每个文章对应的分类数减一
+        for mid in mid_list:
+            t = aiyblog_metas.query.filter_by(mid=mid).first()
+            t.count-=1
+            db.session.add(t)
+            db.session.commit()
+
+        #解除关系(cid-mid)
+        for cid in cid_list:
+            content = aiyblog_contents.query.filter_by(cid=cid).first()
+            #解除关联关系
+            rea = aiyblog_relationships.query.filter_by(cid=cid).all()
+            for x in rea:
+                db.session.delete(x)
+                db.session.commit()
+
+        #删除文章
+        for cid in cid_list:
+            t = aiyblog_contents.query.filter_by(cid=cid).first()
+            db.session.delete(t)
+            db.session.commit()
+
+        #删除分类
         for mid in ct_list:
             t = aiyblog_metas.query.filter_by(mid=mid).first()
             db.session.delete(t)
-
-        #删除分类，解除与文章的关联，删除该分类下所有的内容
-        print("t.count is %d"%(t.count))
-        if t.count != 0:
-            #解除与文章的关联
-            cid_list = list()
-            for mid in ct_list:
-                t = aiyblog_relationships.query.filter_by(mid=mid).first()
-                cid_list.append(t.cid)
-                db.session.delete(t)
-            #删除内容
-            for cid in cid_list:
-                t = aiyblog_contents.query.filter_by(cid=cid).first()
-                db.session.delete(t)
-
-        db.session.commit()
-        db.session.close()
+            db.session.commit()
 
         return redirect(url_for("AiyBlog.admin.manage.categories"))
+
+
+

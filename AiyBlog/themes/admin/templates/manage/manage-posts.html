@@ -1,0 +1,111 @@
+{% extends "admin/__base__.html" %}
+
+
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block title %}
+    管理文章
+{% endblock %}
+
+{% block nav %}
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="title">
+            <h2>管理文章 <a href="{{ url_for("AiyBlog.admin.write.post") }}">添加</a></h2>
+        </div>
+        <div class="row">
+            <div class="col-mb-12">
+                <form id="manage-posts" action="{{ url_for("AiyBlog.admin.action.delete_post") }}" method="post">
+                <div class="dropdown-select">
+                    <button type="button" class="submit" style="width:93px;" onclick="del(this)"  value="0">选中项 <i class="iconfont icon-xiala1"></i></button>
+                    <ul id="show-del">
+                        <li><button type="button" onclick="submit_form()">删除</button></li>
+                    </ul>
+                </div>
+                <div class="table-warp">
+                <table class="manage-posts-table" cellpadding="0" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th>操作</th>
+                        <th>评论数量</th>
+                        <th>标题</th>
+                        <th>作者</th>
+                        <th>分类</th>
+                        <th>日期</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for blog in blogs %}
+                    <tr onclick="select(this)" id="post-{{ blog.cid }}" class="">
+                        <td><input type="checkbox" value="{{ blog.cid }}" name="cid[]"></td>
+                        <td>1</td>
+                        <td>
+                            <a href="{{ url_for("AiyBlog.admin.write.post",cid=blog.cid) }}" title="编辑">
+                                {{ blog.title }}<i class="iconfont icon-bi"></i>
+                            </a>
+                            <a href="#" title="预览 {{ blog.cid }}">
+                                <i class="iconfont icon-liulan"></i>
+                            </a>
+
+                           </td>
+                        <td>{{ get_name_by_id (blog.authorId) }}</td>
+                        <td>
+{#                        {% for x in  find_mid_by_cid(blog.cid) %}#}
+{#                        {{ x }}#}
+{#                        {% endfor %}#}
+                        {{ get_cgs_by_cid(blog.cid) }}
+
+                        </td>
+
+                        <td>{{ blog.created|showtime }}</td>
+
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+    function select(obj) {
+
+        if(obj.classList.contains("checked"))
+        {
+            obj.querySelector('input').checked = false;
+            obj.classList.remove("checked")
+        }
+        else{
+            obj.querySelector('input').checked = true;
+            obj.classList.add("checked")
+        }
+    }
+
+    function del(obj) {
+        if(obj.value==="0") {
+            document.getElementById("show-del").style.display = "block";
+            obj.value = "1"
+        }
+        else{
+            document.getElementById("show-del").style.display = "none";
+            obj.value = "0";
+        }
+    }
+    function submit_form() {
+        let r = confirm("真的要删除选中的文章吗？");
+        if(r===true)
+        {
+           document.getElementById("manage-posts").submit()
+        }
+        else{
+            console.log("3")
+        }
+    }
+    </script>
+{% endblock %}

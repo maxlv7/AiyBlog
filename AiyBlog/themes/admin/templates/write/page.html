@@ -7,7 +7,11 @@
 {% endblock %}
 
 {% block title %}
-    创建新页面
+    {% if request.args.get("cid") %}
+        修改独立页面-{{ page.title }}
+    {% else %}
+        创建新页面
+    {% endif %}
 {% endblock %}
 
 {% block nav %}
@@ -17,11 +21,40 @@
 {% block content %}
     <div class="main">
         <div class="container">
-            <h3>创建新页面</h3>
+            {% if request.args.get("cid") %}
+                <h3>修改独立页面-{{ page.title }}</h3>
+            {% else %}
+                <h3>创建新页面</h3>
+            {% endif %}
             <div class="row">
-                <form action="#" method="post">
+            {% if request.args.get("cid") %}
+                <form action="{{ url_for("AiyBlog.admin.action.modify_page") }}" method="post">
+            {% else %}
+                <form action="{{ url_for("AiyBlog.admin.action.add_page") }}" method="post">
+            {% endif %}
                 <div class="col-9 col-mb-12 col-tb-9">
-                        <div class="summary">
+                     {% if request.args.get("cid") %}
+                         <input type="text" name="cid" value="{{ page.cid }}" style="display: none">
+                         <div class="summary">
+                            <p>
+                                <input type="text" name="title" placeholder="" autocomplete="off" value="{{ page.title }}">
+                            </p>
+                            <p style="position: relative; display: inline-block">{{ get_config("siteUrl") }}/
+                               <div style="display: inline-block;position: relative;">
+                                 <input type="text" class="slug" name="slug" autocomplete="off" value="{{ page.slug }}">
+                            <pre style="display: block; visibility: hidden; height: 1rem; padding: 0 2px; margin: 0;">                 </pre>
+                                </div>
+                            </p>
+                        </div>
+                          <div id="aiyblog-write" class="editormd" >
+                          <!-- 这个文本域是用来保存markdown源码的，当我们要写入从数据库读出的markdown的时候，可以把数据填充到此-->
+                            <textarea class="editormd-markdown-textarea" name="markdown">{{ page.text }}</textarea>
+                          <!-- 第二个隐藏文本域，用来构造生成的HTML代码，方便表单POST提交，这里的name可以任意取，后台接受时以这个name键为准 -->
+                            <textarea class="editormd-html-textarea" name="text"></textarea>
+                        </div>
+                        <button type="submit" class="submit">发布独立页面</button>
+                     {% else %}
+                         <div class="summary">
                             <p>
                                 <input type="text" name="title" placeholder="标题" autocomplete="off">
                             </p>
@@ -32,40 +65,72 @@
                                 </div>
                             </p>
                         </div>
-                         <div id="aiyblog-write" class="editormd" >
+                      <div id="aiyblog-write" class="editormd" >
                           <!-- 这个文本域是用来保存markdown源码的，当我们要写入从数据库读出的markdown的时候，可以把数据填充到此-->
                             <textarea class="editormd-markdown-textarea" name="markdown"></textarea>
                           <!-- 第二个隐藏文本域，用来构造生成的HTML代码，方便表单POST提交，这里的name可以任意取，后台接受时以这个name键为准 -->
                             <textarea class="editormd-html-textarea" name="text"></textarea>
                         </div>
                         <button type="submit" class="submit">发布文章</button>
-
+                     {% endif %}
 
                  </div>
                 <div class="col-3 col-tb-3 col-mb-12">
                     <div class="write-options">
 
                         <h4>页面顺序</h4>
-                        <input type="number" name="order" autocomplete="off">
+                        {% if request.args.get("cid") %}
+                            <input type="number" name="order" autocomplete="off" value="{{ page.order }}">
+                        {% else %}
+                            <input type="number" name="order" autocomplete="off">
+                        {% endif %}
                         <label style="margin: 1rem 0; display: block; font-size: .8rem;color: #4c4c4c">为你的自定义页面设定一个序列值以后, 能够使得它们按此值从小到大排列</label>
                         <p>
                             <button type="button" class="high" onclick="show()">高级选项 ></button>
                         </p>
                             <div class="options" id="options" style="display: none">
                                 <label style="font-weight: 700; color: #5d5d5d; display: block;">公开度</label>
-                                <p>
-                                    <select name="visibility" id="visibility" onchange="test(this.value)">
-                                        <option value="publish">公开</option>
-                                        <option value="password">加密</option>
-                                        <option value="hide">隐藏</option>
-                                    </select>
                                     <p>
-                                        <input type="text" id="pwd" style="display: none" placeholder="请输入密码">
-                                    </p>
+                                        {% if request.args.get("cid") %}
+                                            <select name="visibility" id="visibility"  onchange="test(this.value)">
+                                                <option value="publish">公开</option>
+                                                <option value="password">加密</option>
+                                                <option value="hide">隐藏</option>
+                                            </select>
+                                            <p>
+                                                <input type="text" id="pwd" name="password" style="display: none" placeholder="请输入密码">
+                                            </p>
+                                            <script>
+                                            document.getElementById("visibility").value = "{{ page.status }}"
+                                            if(document.getElementById("visibility").value==="password")
+                                            {
+                                                document.getElementById("pwd").style.display = "block"
+                                                 document.getElementById("pwd").value = "{{ page.password }}"
+                                            }
+                                            </script>
+                                        {% else %}
+                                            <select name="visibility" id="visibility" onchange="test(this.value)">
+                                                <option value="publish">公开</option>
+                                                <option value="password">加密</option>
+                                                <option value="hide">隐藏</option>
+                                            </select>
+                                            <p>
+                                                <input type="text" name="password" id="pwd" style="display: none" placeholder="请输入密码">
+                                            </p>
+                                        {% endif %}
+
                                 </p>
 
                               <label style="font-weight: 700; color: #5d5d5d; display: block; padding-bottom: 1rem;">权限控制</label>
+                                {% if request.args.get("cid") %}
+                                    {% if page.allowComment == "on" %}
                                     <input type="checkbox" id="allowComments" name="allowComments" checked>
+                                        {% else %}
+                                         <input type="checkbox" id="allowComments" name="allowComments">
+                                        {% endif %}
+                                {% else %}
+                                    <input type="checkbox" id="allowComments" name="allowComments" checked>
+                                {% endif %}
                                    <label for="allowComments">允许评论</label>
 
 

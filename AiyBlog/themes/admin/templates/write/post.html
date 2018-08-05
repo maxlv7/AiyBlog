@@ -16,25 +16,53 @@
 
 {% block content %}
     <div class="main">
+
         <div class="container">
-            <h3>撰写新文章</h3>
+        {% if request.args.get("cid") %}
+               <h3>修改文章-{{ blog.title }}</h3>
+        {% else %}
+               <h3>撰写新文章</h3>
+        {% endif %}
             <div class="row">
-                <form action="#" method="post">
+            {% if request.args.get("cid") %}
+                <form action="{{ url_for("AiyBlog.admin.action.modify_post") }}" method="post">
+                <input type="text" name="cid" value="{{ blog.cid }}" style="display: none">
+            {% else %}
+                <form action="{{ url_for("AiyBlog.admin.action.edit_post") }}" method="post">
+            {% endif %}
+
                 <div class="col-9 col-mb-12 col-tb-9">
                         <div class="summary">
+                            {% if request.args.get("cid") %}
+                            <p>
+                                <input type="text" name="title" placeholder="" autocomplete="off" value="{{ blog.title }}">
+                            </p>
+                                <p>{{ get_config("siteUrl") }}/archives/{{ blog.cid }}</p>
+                            {% else %}
                             <p>
                                 <input type="text" name="title" placeholder="标题" autocomplete="off">
                             </p>
-                            <p>{{ get_config("siteUrl") }}/archives/{cid}/</p>
+                            <p>{{ get_config("siteUrl") }}/archives/{cid}</p>
+                            {% endif %}
+
+
                         </div>
+                        {% if request.args.get("cid") %}
+                         <div id="aiyblog-write" class="editormd" >
+                          <!-- 这个文本域是用来保存markdown源码的，当我们要写入从数据库读出的markdown的时候，可以把数据填充到此-->
+                            <textarea class="editormd-markdown-textarea" name="markdown">{{ blog.text }}</textarea>
+                          <!-- 第二个隐藏文本域，用来构造生成的HTML代码，方便表单POST提交，这里的name可以任意取，后台接受时以这个name键为准 -->
+                            <textarea class="editormd-html-textarea" name="text"></textarea>
+                        </div>
+                        {% else %}
                          <div id="aiyblog-write" class="editormd" >
                           <!-- 这个文本域是用来保存markdown源码的，当我们要写入从数据库读出的markdown的时候，可以把数据填充到此-->
                             <textarea class="editormd-markdown-textarea" name="markdown"></textarea>
                           <!-- 第二个隐藏文本域，用来构造生成的HTML代码，方便表单POST提交，这里的name可以任意取，后台接受时以这个name键为准 -->
                             <textarea class="editormd-html-textarea" name="text"></textarea>
                         </div>
-                        <button type="submit" class="submit">发布文章</button>
-
+                        {% endif %}
+                 <button type="submit" class="submit">发布文章</button>
 
                  </div>
                 <div class="col-3 col-tb-3 col-mb-12">
@@ -44,12 +72,27 @@
 {#                        <input type="text">#}
                         <h4>分类</h4>
                         <ul>
+                        {% if request.args.get("cid") %}
+                            {% for c in cat %}
+                              <li>
+                                      {%  if c.mid in find_mid_by_cid(request.args.get("cid"))  %}
+                                         <input id="cg-{{ c.mid }}" type="checkbox" value="{{ c.mid }}" name="category[]" checked>
+                                         <label for="cg-{{ c.mid }}">{{ c.name }}</label>
+                                      {% else %}
+                                          <input id="cg-{{ c.mid }}" type="checkbox" value="{{ c.mid }}" name="category[]" >
+                                          <label for="cg-{{ c.mid }}">{{ c.name }}</label>
+                                      {% endif %}
+                                </li>
+                            {% endfor %}
+                        {% else %}
                             {% for c in cat %}
                               <li>
                                 <input id="cg-{{ c.mid }}" type="checkbox" value="{{ c.mid }}" name="category[]">
                                 <label for="cg-{{ c.mid }}">{{ c.name }}</label>
                             </li>
                             {% endfor %}
+                        {% endif %}
+
                         </ul>
                         <h4>标签</h4>
                         <input name="tags" type="text" placeholder="请输入标签名,用逗号分开">
