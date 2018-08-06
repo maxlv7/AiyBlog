@@ -103,22 +103,49 @@
                                 <label style="font-weight: 700; color: #5d5d5d; display: block;">公开度</label>
                                 <p>
                                     <select name="visibility" id="visibility" onchange="test(this.value)">
+
                                         <option value="publish">公开</option>
                                         <option value="password">加密</option>
                                         <option value="hide">隐藏</option>
                                     </select>
                                     <p>
-                                        <input type="text" id="pwd" style="display: none" placeholder="请输入密码">
+                                        <input type="text" name="password" id="pwd" style="display: none" placeholder="请输入密码">
                                     </p>
                                 </p>
-
                               <label style="font-weight: 700; color: #5d5d5d; display: block; padding-bottom: 1rem;">权限控制</label>
                                     <input type="checkbox" id="allowComments" name="allowComments" checked>
                                    <label for="allowComments">允许评论</label>
-
-
                              </div>
-
+                                        {% if request.args.get("cid") %}
+                                            <script>
+                                            let sel = document.getElementById("visibility");
+                                            let allow = document.getElementById("allowComments");
+                                            status = "{{ blog.status }}"
+                                            v = "{{ blog.allowComment }}"
+                                            console.log(v)
+                                            if(v==="on")
+                                            {
+                                                allow.checked = true;
+                                            }
+                                            else{
+                                                allow.checked = false;
+                                            }
+                                            if(status==="publish")
+                                            {
+                                                sel.value = "publish"
+                                            }
+                                            if(status==="hide")
+                                            {
+                                                sel.value = "hide"
+                                            }
+                                            if(status==="password")
+                                            {
+                                                sel.value ="password";
+                                                document.getElementById("pwd").style.display = "block";
+                                                document.getElementById("pwd").value = "{{ blog.password }}";
+                                            }
+                                            </script>
+                                        {% endif %}
                 </div>
                     </div>
                     </form>

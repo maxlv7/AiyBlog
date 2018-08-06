@@ -27,9 +27,15 @@ def edit_post():
             allowComments = "off"
         status = request.form["visibility"]
 
-        # some oper
-        content = aiyblog_contents(title=title,created=int(time.time()),text=text,type="post",\
-                                   status=status,allowComment=allowComments,authorId=session["uid"])
+        #是否有密码
+        if request.form["password"]:
+            pwd = request.form["password"]
+            content = aiyblog_contents(title=title,created=int(time.time()),text=text,type="post",\
+                                       status=status,allowComment=allowComments,authorId=session["uid"],password=pwd)
+        else:
+            content = aiyblog_contents(title=title,created=int(time.time()),text=text,type="post",\
+                                       status=status,allowComment=allowComments,authorId=session["uid"])
+
         db.session.add(content)
         db.session.commit()
 
@@ -77,11 +83,16 @@ def modify_post():
         cid = request.form.get("cid")
 
         new_blog = aiyblog_contents.query.filter_by(cid=int(cid)).first()
+
+        if status == "password":
+            pwd = request.form["password"]
+            new_blog.password = pwd
         new_blog.title = title
         new_blog.text = text
         new_blog.modified = int(time.time())
         new_blog.status = status
-        new_blog.allowComments = allowComments
+        new_blog.allowComment = allowComments
+        new_blog.modified = int(time.time())
 
         db.session.add(new_blog)
         db.session.commit()
@@ -197,6 +208,7 @@ def modify_page():
         db.session.add(page)
         db.session.commit()
         return redirect(url_for("AiyBlog.admin.manage.pages"))
+
 @action.route('/delete-page',methods=["POST"])
 def delete_page():
     if request.method == "POST":

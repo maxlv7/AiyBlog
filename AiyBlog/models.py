@@ -36,9 +36,9 @@ class aiyblog_contents(db.Model):
     status = db.Column(db.String(16), default="publish")
     password = db.Column(db.String(32), default="NULL")
     commentsNum = db.Column(db.Integer, default=0)
-    allowComment = db.Column(db.String(4),default=0)
-    allowPing = db.Column(db.String(4),default=0)
-    allowFeed = db.Column(db.String(4),default=0)
+    allowComment = db.Column(db.String(16),default="off")
+    allowPing = db.Column(db.String(16),default="off")
+    allowFeed = db.Column(db.String(16),default="off")
     parent = db.Column(db.Integer, default=0)
 
 class aiyblog_fields(db.Model):
