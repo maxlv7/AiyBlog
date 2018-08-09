@@ -95,9 +95,35 @@
 
                         </ul>
                         <h4>标签</h4>
-                        <input name="tags" type="text" placeholder="请输入标签名,用逗号分开">
+                             <button type="button" class="high" onclick="show_tags()">显示标签 ></button>
+                            <div id="tags" class="tags" style="display: none;">
+                            <ul>
+
+                            {% if request.args.get("cid") %}
+                                {% for t in tags %}
+                                  <li>
+                                          {%  if t.mid in find_mid_by_cid(request.args.get("cid"))  %}
+                                             <input id="cg-{{ t.mid }}" type="checkbox" value="{{ t.mid }}" name="tags[]" checked>
+                                             <label for="cg-{{ t.mid }}">{{ t.name }}</label>
+                                          {% else %}
+                                              <input id="cg-{{ t.mid }}" type="checkbox" value="{{ t.mid }}" name="tags[]" >
+                                              <label for="cg-{{ t.mid }}">{{ t.name }}</label>
+                                          {% endif %}
+                                    </li>
+                                {% endfor %}
+                            {% else %}
+                                {% for t in tags %}
+                                    <li>
+                                    <input type="checkbox" id="tag-{{ t.mid }}" value="{{ t.mid }}" name="tags[]"><label for="tag-{{ t.mid }}">{{ t.name }}</label>
+                                    </li>
+                                {% endfor %}
+                            {% endif %}
+
+                            </ul>
+                            </div>
                         <p>
-                            <button type="button" class="high" onclick="show()">高级选项 ></button>
+                            <h4>高级选项</h4>
+                            <button type="button" class="high" onclick="show_option()">高级选项 ></button>
                         </p>
                             <div class="options" id="options" style="display: none">
                                 <label style="font-weight: 700; color: #5d5d5d; display: block;">公开度</label>
@@ -166,8 +192,11 @@
       watch : false,
       toolbarAutoFixed:false
   });
-  function show() {
+  function show_option() {
       document.getElementById("options").style.display = "block";
+  }
+  function show_tags() {
+      document.getElementById("tags").style.display = "block";
   }
   function test(str) {
       if(str==="password")

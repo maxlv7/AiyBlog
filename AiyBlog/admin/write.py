@@ -17,9 +17,9 @@ def post():
     if request.args.get("cid"):
         cid = request.args.get("cid")
         blog = aiyblog_contents.query.filter_by(cid=cid).first()
-        return render_template("admin/write/post.html", cat=categories,blog=blog)
+        return render_template("admin/write/post.html", cat=categories,tags=tags,blog=blog)
 
-    return render_template("admin/write/post.html",cat=categories)
+    return render_template("admin/write/post.html",cat=categories,tags=tags)
 
 @write.route('/page',methods=["GET","POST"])
 def page():

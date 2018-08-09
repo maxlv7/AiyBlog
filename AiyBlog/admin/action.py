@@ -5,6 +5,7 @@ from flask import url_for,request,redirect,session
 
 from AiyBlog.models import aiyblog_contents,aiyblog_relationships,aiyblog_metas
 from AiyBlog import db
+from AiyBlog.utils import get_tags_by_cid
 
 action = Blueprint(__name__,"action",url_prefix='/admin/action')
 
@@ -19,8 +20,7 @@ def edit_post():
 
         # 附加信息
         cgs = request.form.getlist("category[]")
-        raw_tags = request.form["tags"]
-        new_tags = raw_tags.replace('，',',').split(',')
+        tags = request.form.getlist("tags[]")
         try:
             allowComments = request.form["allowComments"]
         except:
@@ -39,7 +39,7 @@ def edit_post():
         db.session.add(content)
         db.session.commit()
 
-        # 先拿到cid,然后再找到对应的mid关系
+        # 先拿到cid,然后再找到对应的mid关系(建立分类关系)
         cid = content.cid
         #用户没有选择分类，那么为默认分类
         if len(cgs)==0:
@@ -59,6 +59,16 @@ def edit_post():
                 db.session.add(t)
                 db.session.commit()
 
+        #建立标签关系
+        for mid in tags:
+            rea = aiyblog_relationships(cid=cid,mid=int(mid))
+            #增加count数
+            t = aiyblog_metas.query.filter_by(mid=mid).first()
+            t.count+=1
+            db.session.add(rea)
+            db.session.add(t)
+            db.session.commit()
+
         return redirect(url_for("AiyBlog.admin.manage.posts"))
 
 
@@ -71,8 +81,8 @@ def modify_post():
 
         # 附加信息
         cgs = request.form.getlist("category[]")
-        raw_tags = request.form["tags"]
-        new_tags = raw_tags.replace('，',',').split(',')
+
+        tags = request.form.getlist("tags[]")
         try:
             allowComments = request.form["allowComments"]
         except:
@@ -100,10 +110,11 @@ def modify_post():
         #删除原来所有的分类(解除分类关系)
         rea = aiyblog_relationships.query.filter_by(cid=cid).all()
         for x in rea:
-            t = aiyblog_metas.query.filter_by(mid=x.mid).first()
-            t.count-=1
-            db.session.add(t)
-            db.session.delete(x)
+            t = aiyblog_metas.query.filter_by(mid=x.mid,type="category").first()
+            if t!=None:
+                t.count-=1
+                db.session.add(t)
+                db.session.delete(x)
         db.session.commit()
 
         # 添加
@@ -123,6 +134,31 @@ def modify_post():
                 db.session.add(t)
             db.session.commit()
 
+        #找到该文章原来所有的标签
+        raw_tags = get_tags_by_cid(cid)
+
+        #解除原来所有和标签关系
+        for x in raw_tags:
+            t = aiyblog_relationships.query.filter_by(mid=x).first()
+            db.session.delete(t)
+        db.session.commit()
+
+        #count数减一
+        for rt in raw_tags:
+            t = aiyblog_metas.query.filter_by(mid=rt).first()
+            t.count-=1
+            db.session.add(t)
+        db.session.commit()
+
+        #建立标签关系
+        for mid in tags:
+            rea = aiyblog_relationships(cid=cid,mid=int(mid))
+            #增加count数
+            t = aiyblog_metas.query.filter_by(mid=mid).first()
+            t.count+=1
+            db.session.add(rea)
+            db.session.add(t)
+        db.session.commit()
         return redirect(url_for("AiyBlog.admin.manage.posts"))
 
 
@@ -308,4 +344,55 @@ def delete_category():
         return redirect(url_for("AiyBlog.admin.manage.categories"))
 
 
+@action.route('/add-tag',methods=["POST"])
+def add_tag():
+    if request.method == "POST":
+        name = request.form["name"]
+        slug = request.form["slug"]
+
+        tag = aiyblog_metas(name=name,slug=slug,type="tag")
+
+        db.session.add(tag)
+        db.session.commit()
+
+        return redirect(url_for("AiyBlog.admin.manage.tags"))
+
+@action.route('/modify-tag',methods=["POST"])
+def modify_tag():
+    if request.method == "POST":
+        mid=request.form["mid"]
+
+        name = request.form["name"]
+        slug = request.form["slug"]
+
+        tag = aiyblog_metas.query.filter_by(mid=int(mid)).first()
+
+        tag.name = name
+        tag.slug = slug
+
+        db.session.add(tag)
+        db.session.commit()
+
+        return redirect(url_for("AiyBlog.admin.manage.tags"))
+
+@action.route('/delete-tag',methods=["POST"])
+def delete_tag():
+    if request.method == "POST":
+        try:
+            mid_list = request.form.getlist("mid[]")
+        except:
+            pass
+        else:
+            for mid in mid_list:
+                #删除关系
+                t = aiyblog_relationships.query.filter_by(mid=mid).all()
+                for x in t:
+                    db.session.delete(x)
+                    db.session.commit()
+                #删除标签
+                t2 = aiyblog_metas.query.filter_by(mid=mid).first()
+                db.session.delete(t2)
+                db.session.commit()
+
+        return redirect(url_for("AiyBlog.admin.manage.tags"))
 

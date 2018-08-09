@@ -7,8 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" href= "{{ request.script_root }}/themes/admin/static/grid.css">
-    <link rel="stylesheet" href= "{{ request.script_root }}/themes/default/static/normalize.min.css">
+    <link rel="stylesheet" href= "{{ request.script_root }}/themes/admin/static/normalize.min.css">
     <link rel="stylesheet" href= "{{ request.script_root }}/themes/admin/static/style.css">
+    <link rel="stylesheet" href= "{{ request.script_root }}/themes/admin/static/iconfont.css">
     {% endblock %}
 </head>
 
@@ -46,16 +47,16 @@
         <div class="root">
             <ul>
                 <li>
-                    <a href="#">管理</a>
+                    <a href="{{ url_for("AiyBlog.admin.manage.posts") }}">管理</a>
                 </li>
                 {#这里为隐藏的菜单#}
                 <ul class="child">
-                    <li><a href="#">文章</a></li>
-                    <li><a href="#">独立页面</a></li>
-                    <li><a href="#">评论</a></li>
-                    <li><a href="#">分类</a></li>
-                    <li><a href="#">标签</a></li>
-                    <li><a href="#">用户</a></li>
+                    <li><a href="{{ url_for("AiyBlog.admin.manage.posts") }}">文章</a></li>
+                    <li><a href="{{ url_for("AiyBlog.admin.manage.pages") }}">独立页面</a></li>
+{#                    <li><a href="{{ url_for("AiyBlog.admin.manage.comments") }}">评论</a></li>#}
+                    <li><a href="{{ url_for("AiyBlog.admin.manage.categories") }}">分类</a></li>
+                    <li><a href="{{ url_for("AiyBlog.admin.manage.tags") }}">标签</a></li>
+{#                    <li><a href="{{ url_for("AiyBlog.admin.manage.users") }}">用户</a></li>#}
                 </ul>
         </ul>
         </div>

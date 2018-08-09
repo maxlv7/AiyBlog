@@ -24,7 +24,7 @@ class DevelopmentConfig(Config):
 
 class ProductionConfig(Config):
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = os.environ.get("DEV_DATA_BASE_URL") or \
+    SQLALCHEMY_DATABASE_URI = os.environ.get("PRO_DATA_BASE_URL") or \
           'sqlite:///' + os.path.join(basedir,"AiyBlog.db") or \
            'mysql+pymysql://root:root@127.0.0.1:3306/aiyblog'
 

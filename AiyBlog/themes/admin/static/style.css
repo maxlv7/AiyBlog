@@ -138,6 +138,7 @@ button {
 .nav .root:hover .child{
     display: block;
 
+
 }
 
 .child {
@@ -147,7 +148,7 @@ button {
     display: none;
     width: 6rem;
     z-index: 250;
-
+    height: 0;
 }
 
 .child li {
@@ -158,7 +159,361 @@ button {
 }
 .child li a:hover {
     background-color: #FFF5DA!important;
+    transition: all .5s;
 }
 
-
 /*导航条结束*/
+
+/*底部开始*/
+.footer {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.footer h3 {
+    font-weight: normal;
+    color: #4c4c4c;
+}
+
+.footer a {
+    color: #ffd75d;
+}
+/*底部结束*/
+
+
+/*控制台首页内容开始*/
+
+.dashboard {
+    color: #4c4c4c;
+
+}
+.dashboard p {
+    font-size: 1.5rem;
+}
+.dashboard h3{
+    font-weight: normal;
+}
+.aiy_title h2{
+    color: #444444;
+}
+.aiy_title {
+    padding-bottom: 1.8rem;
+}
+
+.quick_nav {
+    padding: 1rem 0;
+    border-bottom: 1px solid #ffd75d;
+}
+.quick_nav li {
+    float: left;
+    padding: 0 .5rem;
+}
+.quick_nav li:first-child {
+    padding-left: 0;
+}
+.quick_nav a {
+    color: #ffb530;
+}
+.quick_nav a:hover {
+    border-bottom: 2px solid skyblue;
+    color: lightskyblue;
+}
+
+.recent h4 {
+    color: #444;
+}
+
+.rec {
+    padding-left: 1rem;
+    font-size: .8rem;
+}
+.rec span {
+    line-height: 1.5;
+    color: #6c6c6c;
+    border-right: 1px solid #cccccc;
+    padding-right: .3rem;
+}
+
+.rec a {
+    color: #ffb530;
+    margin-left: .3rem;
+}
+.rec a:hover {
+    border-bottom: 1px solid lightskyblue;
+    color: lightskyblue;
+}
+/*控制台首页内容结束*/
+
+/*控制台个人设置内容开始*/
+.user-brief p{
+    color: #444444;
+}
+.user-profile input {
+    padding: .3rem;
+    display: block;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+.user-profile li >p {
+    color: #4c4c4c;
+}
+.user-profile label{
+    display: block;
+    color: #6c6c6c;
+    font-size: .8rem;
+}
+.user-profile button {
+    margin-top: 1rem;
+    width: 20%;
+}
+.hint {
+    background: #ffe267;
+    margin-top: 1rem;
+    padding: .4rem;
+    color: #8A1F11;
+    display: none;
+}
+/*控制台个人设置内容结束*/
+
+/*设置基本内容开始*/
+h2 {
+    color: #343434;
+}
+.submit {
+    background-color: #FF8500;
+    width: 100%;
+    text-align: center;
+    padding: .6rem;
+    cursor: pointer;
+    border-radius: 2px;
+    transition:  background-color 0.5s;
+    color: #ffffff;
+}
+
+.submit:hover {
+    background-color: orange;
+}
+
+#settings-base ul li >input{
+    display: block;
+    width: 100%;
+    padding: .3rem;
+    color: #404040;
+    border: 1px solid #bfbfbf;
+    border-radius: 2px;
+}
+
+#settings-base ul li >label {
+    display: block;
+    margin-bottom: .5rem;
+    color: #4c4c4c;
+
+}
+
+#settings-base label {
+     color: #4c4c4c;
+}
+#settings-base p {
+    color: #6c6c6c;
+    font-size: .8rem;
+}
+/*设置基本内容结束*/
+
+/*写开始*/
+.write-options h4 {
+    color: #5d5d5d;
+}
+.write-options >input {
+    width: 100%;
+    padding: .3rem;
+
+
+}
+.write-options ul {
+    border: 1px solid #ccc;
+    background-color: #fff;
+    padding: .3rem;
+    color: #4c4c4c;
+}
+.write-options ul li {
+    padding: 0.1rem 0;
+}
+.high {
+    padding: .3rem;
+    background-color: #FF8500;
+    border-radius: 2px;
+    color: #FFFFFF;
+    cursor: pointer;
+    transition: all .5s;
+}
+.high:hover {
+    background-color: orange;
+}
+.summary input{
+    width: 100%;
+    display: block;
+    padding: .3rem;
+    border-radius: 2px;
+    border: 1px solid #dbdbdb;
+}
+.summary p:nth-child(2) {
+    color: #818181;
+    font-size: .8rem;
+}
+
+.summary .slug {
+    position: absolute;
+    top: 2px;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background-color: #e7e7e7;
+    font-size: .8rem;
+    color: #444444;
+
+}
+.tags ul {
+    margin-top: 1rem;
+}
+.tags label {
+    margin-left: .2rem;
+    color: #4c4c4c;
+}
+/*写结束*/
+
+/*管理开始*/
+.table-warp {
+    padding: 2rem;
+    background-color: #f9f9f9;
+}
+
+.manage-posts-table {
+    border: 0;
+    width: 100%;
+    text-align: left;
+}
+.manage-posts-table thead th{
+    color: #404040;
+}
+.manage-posts-table tbody{
+    color: #5a5a5a;
+}
+.manage-posts-table td,th {
+    padding: .7rem;
+    border-top: 1px solid #d8d8d8;
+}
+.manage-posts-table tr:hover {
+    background-color: #e0e0e0;
+}
+.manage-posts-table .checked {
+    background-color: #e0e0e0;
+}
+
+.dropdown-select {
+    position: relative;
+    margin-bottom: 1rem;
+}
+.dropdown-select ul{
+    display: none;
+    position: absolute;
+    left: 10px;
+}
+.dropdown-select ul li button{
+    display: block;
+    padding: .3rem;
+    background-color: #e4c860;
+    min-width: 100px;
+    color: #fff;
+    cursor: pointer;
+}
+
+#manage-tags ul{
+    background-color: #f9f9f9;
+    padding: 1.4rem;
+}
+#manage-tags ul li{
+    display: inline-block;
+    padding: 5px 5px 5px 10px;
+
+}
+
+#manage-tags ul li:hover{
+    background-color: #dcdcdc;
+    cursor: pointer;
+    transition: all .5s;
+}
+
+#manage-tags ul li a{
+  visibility: hidden;
+}
+#manage-tags ul li:hover a{
+    visibility: visible;
+}
+#manage-tags ul li input{
+    display: none;
+}
+#manage-tags .checked{
+    background-color: #ffb928!important;
+}
+.tags-option p{
+    font-weight: 700;
+}
+.tags-option label{
+    display: block;
+    color: #4c4c4c;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    font-size: .8rem;
+}
+.tags-option input{
+    width: 100%;
+    padding: .3rem;
+
+}
+/*管理结束*/
+
+/*添加分类开始*/
+#addCategory p{
+    font-weight: 700;
+    color: #2e2e2e;
+}
+#addCategory input{
+    padding: .3rem;
+    display: block;
+    width: 100%;
+    border: 1px solid #EEEEEE;
+    border-radius: 2px;
+}
+
+#addCategory label{
+    margin-top: 1rem;
+    display: block;
+    color: #c1c1c1;
+}
+
+#addCategory textarea{
+    overflow: auto;
+    resize: vertical;
+    padding: .3rem;
+    border: 1px solid #EEEEEE;
+    border-radius: 2px;
+    width: 100%;
+    margin: 0;
+    height: 5rem;
+}
+/*添加分类结束*/
+
+/*Title*/
+.title a {
+    display: inline-block;
+    background-color: #d6d6d6;
+    font-size: 1rem;
+    padding: .2rem;
+    color: #659fc1;
+    transition: all .5s;
+}
+.title a:hover {
+    color: #7eb7e0;
+}
+/*Title*/

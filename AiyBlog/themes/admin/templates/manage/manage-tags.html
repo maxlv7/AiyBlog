@@ -1,0 +1,140 @@
+{% extends "admin/__base__.html" %}
+
+
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block title %}
+    {% if request.args.get("mid") %}
+        修改分类-{{ tag.name }}
+    {% else %}
+        管理标签
+    {% endif %}
+{% endblock %}
+
+{% block nav %}
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div>
+    {% if request.args.get("mid") %}
+       <h2>修改分类-{{ tag.name }}</h2>
+    {% else %}
+         <h2>管理标签</h2>
+    {% endif %}
+
+        </div>
+        <div class="row">
+            <div class="col-mb-12 col-tb-8">
+                <div class="dropdown-select">
+                    <button id = "t" type="button" class="submit" style="width:93px;" onclick="del(this)"  value="0">选中项 <i class="iconfont icon-xiala1"></i></button>
+                    <ul id="show-del">
+                        <li><button type="button" onclick="submit_form()">删除</button></li>
+                    </ul>
+                </div>
+                <form id="manage-tags" action="{{ url_for("AiyBlog.admin.action.delete_tag") }}" method="post">
+                    <ul>
+                        {% for tag in tags %}
+                        <li class="tags">
+                            <input type="checkbox" name="mid[]" value="{{ tag.mid }}"><span style="color: #4c4c4c">{{ tag.name }}</span>
+                            <a href="{{ url_for("AiyBlog.admin.manage.tags",mid=tag.mid) }}" class="iconfont icon-bi"></a>
+                        </li>
+                        {% endfor %}
+
+                    </ul>
+                </form>
+            </div>
+            <div class="col-mb-12 col-tb-4">
+
+
+                    {% if request.args.get("mid") %}
+                    <form id="tags-option" action="{{ url_for("AiyBlog.admin.action.modify_tag") }}" method="post">
+                         <div class="tags-option">
+                            <p>标签名称*</p>
+                            <input id="t-name" type="text" name="name" value="{{ tag.name }}">
+                            <label>这是标签在站点中显示的名称.可以使用中文,如 "地球".</label>
+                            <p id="show-error" class="hint">必须填写标签名称</p>
+                            <p>标签缩略名</p>
+                            <input type="text" name="slug" value="{{ tag.slug }}">
+                            <label>标签缩略名用于创建友好的链接形式, 如果留空则默认使用标签名称.</label>
+                            <button id="sub" type="button" class="submit">修改标签</button>
+                             <input type="text" name="mid" value="{{ tag.mid }}" style="display: none;">
+                        </div>
+                    </form>
+                    {% else %}
+                    <form id="tags-option" action="{{ url_for("AiyBlog.admin.action.add_tag") }}" method="post">
+                        <div class="tags-option">
+                            <p>标签名称*</p>
+                            <input id="t-name" type="text" name="name" >
+                            <label>这是标签在站点中显示的名称.可以使用中文,如 "地球".</label>
+                            <p id="show-error" class="hint">必须填写标签名称</p>
+                            <p>标签缩略名</p>
+                            <input type="text" name="slug" >
+                            <label>标签缩略名用于创建友好的链接形式, 如果留空则默认使用标签名称.</label>
+                            <button id="sub" type="button" class="submit">添加标签</button>
+                        </div>
+                    </form>
+                    {% endif %}
+
+
+            </div>
+        </div>
+    </div>
+<script>
+    function del(obj) {
+        if(obj.value==="0") {
+            document.getElementById("show-del").style.display = "block";
+            obj.value = "1"
+        }
+        else{
+            document.getElementById("show-del").style.display = "none";
+            obj.value = "0";
+        }
+    }
+        function submit_form() {
+        let r = confirm("真的要删除选中的标签吗？");
+        if(r===true)
+        {
+           document.getElementById("manage-tags").submit()
+        }
+        else{
+            console.log("no")
+        }
+    }
+
+    //标签处理机制
+    let tag = document.getElementsByClassName("tags");
+    for(let i=0;i<tag.length;i++)
+    {
+        tag[i].addEventListener('click',function () {
+        el = tag[i].querySelector("input");
+        if (el.checked)
+        {
+           el.checked = false;
+            tag[i].classList.remove("checked");
+
+        }
+        else{
+           el.checked = true;
+           tag[i].classList.add("checked");
+        }
+    },false)
+    }
+
+    let sub = document.getElementById("sub");
+sub.addEventListener('click',function () {
+    if(document.getElementById("t-name").value==="")
+    {
+        document.getElementById("show-error").style.fontWeight = "400";
+        document.getElementById("show-error").style.display = "block";
+    }
+    else{
+
+        document.getElementById("tags-option").submit()
+    }
+},false)
+</script>
+{% endblock %}
