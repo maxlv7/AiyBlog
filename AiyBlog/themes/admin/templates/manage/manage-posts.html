@@ -48,7 +48,7 @@
                             <a href="{{ url_for("AiyBlog.admin.write.post",cid=blog.cid) }}" title="编辑">
                                 {{ blog.title }}<i class="iconfont icon-bi"></i>
                             </a>
-                            <a href="#" title="预览 {{ blog.cid }}">
+                            <a href="{{ url_for("views.archives",cid=blog.cid) }}" title="预览 {{ blog.cid }}">
                                 <i class="iconfont icon-liulan"></i>
                             </a>
 

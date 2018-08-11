@@ -50,7 +50,7 @@
                             {#    通过session来控制是否显示评论    #}
                                 {% if session["uid"] %}
                                 <p>
-                                    登录身份：<a href="#">admin.</a>
+                                    登录身份：<a href="/">{{ session["username"] }}</a>
                                     <a href="{{ url_for("auth.logout") }}">退出 >></a>
                                 </p>
                                 {% endif %}
