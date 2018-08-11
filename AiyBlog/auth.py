@@ -1,3 +1,5 @@
+import time
+
 from flask import Blueprint,request,session,render_template,redirect,url_for
 
 from AiyBlog import db
@@ -9,28 +11,34 @@ auth = Blueprint("auth",__name__,url_prefix='/auth')
 @auth.route('/login',methods=["GET","POST"])
 def login():
 
+    if authed():
+        return redirect(url_for("views.index"))
     if request.method == "POST":
         errors = []
         name = request.form["username"]
         user = aiyblog_users.query.filter_by(name=name).first()
 
-        if user:
-            if user and (request.form["password"])==user.password:
 
-                session["username"] = user.name
-                session["uid"] = user.uid
-                session["admin"] = user.group
-                db.session.close()
+        if user and (request.form["password"])==user.password:
+            print('0000')
+            session["username"] = user.name
+            session["uid"] = user.uid
+            session["admin"] = user.group
+            user.activated = int(time.time())
+            # user.activated = 123
+            # print(user.activated)
+            db.session.commit()
+            db.session.close()
 
-                # login successful
-                return redirect(url_for("admin.admin_index"))
-            #the user is exists but the password is wrong
-            else:
+            # login successful
+            return redirect(url_for("admin.admin_index"))
+        #the user is exists but the password is wrong
+        else:
 
-                errors.append("Your username or password is incorrect!")
-                db.session.close()
-
-                return render_template("admin/auth/login.html",errors=errors)
+            errors.append("你的用户名或者密码不正确!")
+            db.session.close()
+            print("11111")
+            return render_template("admin/auth/login.html",errors=errors)
 
     return render_template("admin/auth/login.html")
 
@@ -47,7 +55,7 @@ def register():
 
 
         if len(errors)==0:
-            u = aiyblog_users(name=username,password=pwd2hash(password.encode("utf-8")))
+            u = aiyblog_users(name=username,password=pwd2hash(password.encode("utf-8")),created=int(time.time()))
             db.session.add(u)
             db.session.commit()
             db.session.close()
@@ -63,6 +71,8 @@ def register():
 def logout():
     if authed():
         session.clear()
-    return "you are logout successful!"
+        return redirect(url_for("auth.login"))
+    else:
+        return redirect(url_for("auth.login"))
 
 

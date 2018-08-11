@@ -1,7 +1,7 @@
 import functools,hashlib,time
 
 from flask import current_app as app
-from flask import render_template,session,abort
+from flask import render_template,session,abort,request
 
 from AiyBlog import db
 from AiyBlog.models import aiyblog_users,aiyblog_options,aiyblog_relationships,aiyblog_metas
@@ -40,6 +40,14 @@ def init_utils(app):
     #jinja2 自定义过滤器
     app.jinja_env.filters["showtime"] = showtime
     app.jinja_env.filters["showcategories"] = showcategories
+
+
+    @app.before_request
+    def check_admin():
+        path = request.path
+        if path.startswith('/admin'):
+            if not is_admin():
+                abort(403)
 
 
 def showcategories(l:list):

@@ -195,7 +195,7 @@ button {
     line-height: 1.5;
 }
 @media all and (max-width: 768px) {
-    #header, .post-title, .post-meta {
+     .post-title, .post-meta {
         text-align: center;
     }
     #header a {

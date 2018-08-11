@@ -90,7 +90,7 @@
                     </p>
                 </form>
                 <p class="return">
-                    {% if get_config("allowRegister")==1 %}
+                    {% if get_config("allowRegister")=="1" %}
                     <a href="{{ url_for("auth.register") }}">用户注册 |</a>
                     {% endif %}
                     <a href="/">返回首页</a>

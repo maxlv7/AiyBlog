@@ -79,7 +79,7 @@
         <ul>
             <li><a href="#">{{ session["username"] }}</a></li>
             <li><a href={{ url_for("auth.logout") }}>登出</a></li>
-            <li><a href={{ url_for("views.ttttt") }}>网站</a></li>
+            <li><a href="{{ url_for("views.index") }}" target="_blank">网站</a></li>
         </ul>
     </div>
 </div>

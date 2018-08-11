@@ -59,6 +59,8 @@ def create_app(config_name):
     from AiyBlog.admin.settings import settings
     from AiyBlog.admin.write import write
     from AiyBlog.admin.console import console
+    from AiyBlog.admin.manage import manage
+    from AiyBlog.admin.action import action
     from AiyBlog.views import views
 
     app.register_blueprint(auth)
@@ -67,6 +69,8 @@ def create_app(config_name):
     app.register_blueprint(settings)
     app.register_blueprint(write)
     app.register_blueprint(console)
+    app.register_blueprint(manage)
+    app.register_blueprint(action)
 
     return app
 

@@ -3,7 +3,7 @@
 <head>
     {% block head %}
     <meta charset="UTF-8">
-    <title>{% block title %}Title{% endblock %}</title>
+    <title>{% block title %}{{ get_config("siteName") }}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" href= "{{ request.script_root }}/themes/default/static/grid.css">
@@ -18,8 +18,8 @@
     <div class="container">
         <div class="row">
             <div class="col-mb-12 col-9">
-                <a id="logo" href="#">Hello world!</a>
-                <p class="description">This is aiyblog system!</p>
+                <a id="logo" href="/">{{ get_config("siteName") }}!</a>
+                <p class="description">{{ get_config("siteDescription") }}!</p>
             </div>
 
             {#这里是全文搜索#}
@@ -33,9 +33,18 @@
             {#这里渲染出所有的独立页面#}
             <div id="nav-menu" class="col-mb-12">
                 <nav class="clearfix">
-                    <a class="current" href="">首页</a>
-                    <a href="">关于</a>
-                    <a href="">我的</a>
+
+                {% if request.path == '/' %}
+                 <a class="current" href="/">首页</a>
+                {% else %}
+                     <a href="/">首页</a>
+                {% endif %}
+                    {% for page in pages %}
+                        <a id="page-{{ page.cid }}" href="/index/{{ page.slug }}">{{ page.title }}</a>
+
+                    {% endfor %}
+
+
                 </nav>
             </div>
         </div>
@@ -50,30 +59,33 @@
             {#左边文章#}
         {% block content %}
             <div class="col-mb-12 col-8">
-                <article class="post">
-                    <h2 class="post-title"><a href="#">文章标题</a></h2>
+            {% for blog in blogs %}
+                 <article class="post">
+                    <h2 class="post-title"><a href="{{ url_for("views.archives",cid=blog.cid) }}">{{ blog.title }}</a></h2>
                     <ul class="post-meta">
                         <li>
-                            作者：<a href="#">Li</a>
+                            作者：<a href="#">{{ get_name_by_id(blog.authorId) }}</a>
                         </li>
                         <li>
-                            时间：2018年7月9日
+                            时间：{{ blog.created|showtime }}
                         </li>
                         <li>
-                            分类：<a href="#">test</a>
+                            分类：<a href="#">{{ get_cgs_by_cid(blog.cid) }}</a>
                         </li>
                         <li>
                             <a href="#">评论</a>
                         </li>
                     </ul>
                     <div class="post-content">
-                        这里是文章内容的一部分。。。
+                        {{ blog.text }}
                     </div>
                 {% block tags %}
                 <p class="tags">标签：none</p>
                 {% endblock %}
 
                 </article>
+            {% endfor %}
+
                     {% block comments %}
 
                     {% endblock %}
@@ -85,33 +97,37 @@
                 <section class="sec">
                     <h4>最新文章</h4>
                     <ul>
-                        <li><a href="#">tudou.com</a></li>
-                        <li><a href="#">tudou.com</a></li>
-                        <li><a href="#">tudou.com</a></li>
+                        {% for na in new_articles %}
+                            <li><a href="{{ url_for("views.archives",cid=na.cid) }}">{{ na.title }}</a></li>
+                        {% endfor %}
                     </ul>
                 </section>
                 <section class="sec">
                     <h4>最新回复</h4>
                     <ul>
-                        <li><a href="">Tether</a></li>
-                        <li><a href="">Tether</a></li>
-                        <li><a href="">Tether</a></li>
-
+                        <li><a href="">无</a></li>
                     </ul>
                 </section>
                 <section class="sec">
                     <h4>分类</h4>
                     <ul>
-                        <li><a href="">分类一</a></li>
-                        <li><a href="">分类一</a></li>
+                        {% for cat in categories %}
+                            <li><a href="/">{{ cat.name }}</a></li>
+
+                        {% endfor %}
                     </ul>
                 </section>
                 <section class="sec">
                     <h4>其它</h4>
                     <ul>
-                        <li><a href={{ url_for("admin.admin_index") }}>进入后台</a></li>
-                        <li><a href="">退出</a></li>
-                        <li><a href="">官方博客</a></li>
+                        {% if session["uid"] %}
+                             <li><a href={{ url_for("admin.admin_index") }}>进入后台({{ get_name_by_id(session["uid"]) }})</a></li>
+                        {% else %}
+                             <li><a href={{ url_for("auth.login") }}>登录</a></li>
+                        {% endif %}
+
+                        <li><a href="{{ url_for("auth.logout") }}">退出</a></li>
+                        <li><a href="http://maxlv.org">官方博客</a></li>
                     </ul>
                 </section>
             </div>
@@ -124,7 +140,7 @@
 {#footer#}
 {% block footer %}
 <div id="footer">
-@2018 <a href="#">Hello world</a> 由 <a href="#">Aiyblog</a> 强力驱动
+@2018 <a href="#">{{ get_config("siteName") }}</a> 由 <a href="#">Aiyblog</a> 强力驱动
 </div>
 {% endblock %}
 {#footer#}
